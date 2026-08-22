@@ -1,0 +1,65 @@
+{% extends 'chat/base.html' %}
+
+{% block body %}
+<div class="app">
+    <!-- SIDEBAR -->
+    <div class="sidebar">
+        <div class="sidebar-header">
+            <div class="logo">🌊</div>
+            <span class="logo-text">WaveChat</span>
+        </div>
+
+        <div class="rooms-label">
+            <span>Rooms</span>
+        </div>
+
+        <div class="rooms-list">
+            {% for room in rooms %}
+            <a href="{% url 'room' room.slug %}" class="room-item">
+                <span class="room-hash">#</span>
+                <span class="room-name">{{ room.name }}</span>
+            </a>
+            {% empty %}
+            <p style="color: #555; font-size: 13px; padding: 8px 10px;">No rooms yet</p>
+            {% endfor %}
+        </div>
+
+        <div class="sidebar-footer">
+            {% if user.is_authenticated %}
+                <div class="user-avatar">{{ user.username|first|upper }}</div>
+                <div class="user-info">
+                    <p class="user-name">{{ user.username }}</p>
+                    <div class="user-status">
+                        <div class="status-dot"></div>
+                        <span class="status-text">Online</span>
+                    </div>
+                </div>
+                <form method="POST" action="{% url 'logout' %}">
+                    {% csrf_token %}
+                    <button type="submit" class="logout-btn" title="Logout">
+                        <i class="ti ti-logout"></i>
+                    </button>
+                </form>
+            {% else %}
+                <a href="{% url 'login' %}" style="color: #6c63ff; text-decoration: none; font-size: 14px;">Login</a>
+                <a href="{% url 'register' %}" style="color: #6c63ff; text-decoration: none; font-size: 14px; margin-left: 8px;">Register</a>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- MAIN -->
+    <div class="main" style="display: flex; align-items: center; justify-content: center;">
+        <div style="text-align: center;">
+            <div style="font-size: 4rem; margin-bottom: 1rem;">🌊</div>
+            <h1 style="font-size: 1.8rem; margin-bottom: 0.5rem;">Welcome to WaveChat</h1>
+            <p style="color: #555; font-size: 1rem;">Select a room from the sidebar to start chatting</p>
+            {% if not user.is_authenticated %}
+                <div style="margin-top: 1.5rem; display: flex; gap: 1rem; justify-content: center;">
+                    <a href="{% url 'login' %}" class="btn" style="width: auto;">Login</a>
+                    <a href="{% url 'register' %}" class="btn" style="width: auto; background: #1a1a1a; border: 1px solid #333;">Register</a>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

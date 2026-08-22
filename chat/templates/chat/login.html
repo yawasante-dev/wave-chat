@@ -1,0 +1,36 @@
+{% extends 'chat/base.html' %}
+
+{% block body %}
+<div class="auth-container">
+    <div class="auth-box">
+        <div class="auth-logo">
+            <div class="logo">🌊</div>
+            <span class="logo-text" style="font-size: 1.3rem;">WaveChat</span>
+        </div>
+        <h1 class="auth-title">Welcome back</h1>
+        <p class="auth-subtitle">Sign in to continue chatting</p>
+
+        <form method="POST">
+            {% csrf_token %}
+            {% for field in form %}
+                <div class="form-group">
+                    <label>{{ field.label }}</label>
+                    {{ field }}
+                    {% if field.errors %}
+                        <ul class="errorlist">
+                            {% for error in field.errors %}
+                                <li>{{ error }}</li>
+                            {% endfor %}
+                        </ul>
+                    {% endif %}
+                </div>
+            {% endfor %}
+            <button type="submit" class="btn">Sign In</button>
+        </form>
+
+        <p class="auth-link">
+            Don't have an account? <a href="{% url 'register' %}">Register</a>
+        </p>
+    </div>
+</div>
+{% endblock %}

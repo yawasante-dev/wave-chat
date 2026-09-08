@@ -67,7 +67,8 @@
                 {% else %}
                 <!-- Others message - left side -->
                 <div style="display: flex; gap: 10px; align-items: flex-start; margin-bottom: 4px;">
-                    <div style="width: 32px; height: 32px; border-radius: 50%; background: linear-gradient(135deg, #f59e0b, #ef4444); display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 12px; color: white; flex-shrink: 0;">
+                    {% load chat_filters %}
+                    <div class="avatar-{{ message.author.username|avatar_color }}" style="width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 12px; color: white; flex-shrink: 0;">
                         {{ message.author.username|first|upper }}
                     </div>
                     <div style="max-width: 60%;">
@@ -79,7 +80,7 @@
                 </div>
                 {% endif %}
             {% empty %}
-                <div style="text-align: center; margin-top: 4rem;">
+                <div id="empty-state" style="text-align: center; margin-top: 4rem;">
                     <p style="font-size: 2rem; margin-bottom: 0.5rem;">💬</p>
                     <p style="color: #555;">No messages yet. Say hello!</p>
                 </div>
@@ -176,6 +177,8 @@
     function sendMessage() {
         const message = messageInput.value.trim();
         if (message) {
+            const emptyState = document.getElementById('empty-state');
+            if (emptyState) emptyState.remove();
             ws.send(JSON.stringify({ message: message, username: username }));
             messageInput.value = '';
         }
